@@ -44,6 +44,6 @@ jobs:
         --output text \
         --no-fail-on-empty-changeset \
         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-        --parameter-overrides file://templates/landing-zone-roles-parameters.json
+        --parameter-overrides file://templates/landing-zone-roles-parameters.json \
         --region us-east-1   
     

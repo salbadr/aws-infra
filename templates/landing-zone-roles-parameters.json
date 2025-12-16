@@ -7,7 +7,7 @@
         "ParameterKey": "LoggingAccountName",
         "ParameterValue": "Logging Account"
     },
-     {
+    {
         "ParameterKey": "SecurityAccountEmail",
         "ParameterValue": "sbadraws.audit@outlook.com"
     },

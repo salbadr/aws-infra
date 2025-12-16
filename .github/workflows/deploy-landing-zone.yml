@@ -42,7 +42,7 @@ jobs:
         --stack-name landing-zone-stack \
         --template-file templates/landing-zone.yaml \
         --output json \
-        --no-fail-on-empty-changeset true \
+        --no-fail-on-empty-changeset "true" \
         --region us-east-1   
     
     - name: Wait Landing Zone Template

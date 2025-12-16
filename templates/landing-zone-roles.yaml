@@ -1,4 +1,5 @@
-AWSTemplateFormatVersion: '2010-09-09'
+---
+AWSTemplateFormatVersion: 2010-09-09
 Description: A CloudFormation template to set the roles for creating Control Tower
 Parameters:
   LoggingAccountEmail:
@@ -15,112 +16,109 @@ Parameters:
     Description: Name for security roles account
 Resources:
   SbadrOrganization:
-    Type: 'AWS::Organizations::Organization'
+    Type: AWS::Organizations::Organization
     Properties:
       FeatureSet: ALL
   LoggingAccount:
-    Type: 'AWS::Organizations::Account'
+    Type: AWS::Organizations::Account
     Properties:
-      AccountName: !Ref LoggingAccountName
-      Email: !Ref LoggingAccountEmail
+      AccountName: LoggingAccountName
+      Email: LoggingAccountEmail
   SecurityAccount:
-    Type: 'AWS::Organizations::Account'
+    Type: AWS::Organizations::Account
     Properties:
-      AccountName: !Ref SecurityAccountName
-      Email: !Ref SecurityAccountEmail
+      AccountName: SecurityAccountName
+      Email: SecurityAccountEmail
   AWSControlTowerAdmin:
-    Type: 'AWS::IAM::Role'
+    Type: AWS::IAM::Role
     Properties:
       RoleName: AWSControlTowerAdmin
       AssumeRolePolicyDocument:
-        Version: 2012-10-17		 	 	 
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
               Service: controltower.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Path: '/service-role/'
+            Action: sts:AssumeRole
+      Path: /service-role/
       ManagedPolicyArns:
-        - !Sub >-
-          arn:${AWS::Partition}:iam::aws:policy/service-role/AWSControlTowerServiceRolePolicy
+        - arn:${AWS::Partition}:iam::aws:policy/service-role/AWSControlTowerServiceRolePolicy
   AWSControlTowerAdminPolicy:
-    Type: 'AWS::IAM::Policy'
+    Type: AWS::IAM::Policy
     Properties:
       PolicyName: AWSControlTowerAdminPolicy
       PolicyDocument:
-        Version: 2012-10-17		 	 	 
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
-            Action: 'ec2:DescribeAvailabilityZones'
-            Resource: '*'
+            Action: ec2:DescribeAvailabilityZones
+            Resource: "*"
       Roles:
-        - !Ref AWSControlTowerAdmin
+        - AWSControlTowerAdmin
   AWSControlTowerCloudTrailRole:
-    Type: 'AWS::IAM::Role'
+    Type: AWS::IAM::Role
     Properties:
       RoleName: AWSControlTowerCloudTrailRole
       AssumeRolePolicyDocument:
-        Version: 2012-10-17		 	 	 
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
               Service: cloudtrail.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Path: '/service-role/'
+            Action: sts:AssumeRole
+      Path: /service-role/
   AWSControlTowerCloudTrailRolePolicy:
-    Type: 'AWS::IAM::Policy'
+    Type: AWS::IAM::Policy
     Properties:
       PolicyName: AWSControlTowerCloudTrailRolePolicy
       PolicyDocument:
-        Version: 2012-10-17		 	 	 
+        Version: 2012-10-17
         Statement:
           - Action:
-              - 'logs:CreateLogStream'
-              - 'logs:PutLogEvents'
-            Resource: !Sub >-
-              arn:${AWS::Partition}:logs:*:*:log-group:aws-controltower/CloudTrailLogs:*
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: arn:${AWS::Partition}:logs:*:*:log-group:aws-controltower/CloudTrailLogs:*
             Effect: Allow
       Roles:
-        - !Ref AWSControlTowerCloudTrailRole
+        - AWSControlTowerCloudTrailRole
   AWSControlTowerConfigAggregatorRoleForOrganizations:
-    Type: 'AWS::IAM::Role'
+    Type: AWS::IAM::Role
     Properties:
       RoleName: AWSControlTowerConfigAggregatorRoleForOrganizations
       AssumeRolePolicyDocument:
-        Version: 2012-10-17		 	 	 
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
               Service: config.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Path: '/service-role/'
+            Action: sts:AssumeRole
+      Path: /service-role/
       ManagedPolicyArns:
-        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSConfigRoleForOrganizations
+        - arn:${AWS::Partition}:iam::aws:policy/service-role/AWSConfigRoleForOrganizations
   AWSControlTowerStackSetRole:
-    Type: 'AWS::IAM::Role'
+    Type: AWS::IAM::Role
     Properties:
       RoleName: AWSControlTowerStackSetRole
       AssumeRolePolicyDocument:
-        Version: 2012-10-17		 	 	 
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
               Service: cloudformation.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Path: '/service-role/'
+            Action: sts:AssumeRole
+      Path: /service-role/
   AWSControlTowerStackSetRolePolicy:
-    Type: 'AWS::IAM::Policy'
+    Type: AWS::IAM::Policy
     Properties:
       PolicyName: AWSControlTowerStackSetRolePolicy
       PolicyDocument:
-        Version: 2012-10-17		 	 	 
+        Version: 2012-10-17
         Statement:
-          - Action: 'sts:AssumeRole'
-            Resource: !Sub 'arn:${AWS::Partition}:iam::*:role/AWSControlTowerExecution'
+          - Action: sts:AssumeRole
+            Resource: arn:${AWS::Partition}:iam::*:role/AWSControlTowerExecution
             Effect: Allow
       Roles:
-        - !Ref AWSControlTowerStackSetRole
-
+        - AWSControlTowerStackSetRole
 Outputs:
   LogAccountId:
     Value:

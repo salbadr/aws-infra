@@ -45,12 +45,3 @@ jobs:
         --no-fail-on-empty-changeset \
         --region us-east-1   
     
-    - name: Wait Landing Zone Template
-      run: |
-       aws cloudformation wait stack-exists \
-        --stack-name landing-zone-stack || \
-        aws cloudformation wait stack-create-complete \
-        --stack-name landing-zone-stack || \ 
-        aws cloudformation wait stack-update-complete \
-        --stack-name landing-zone-stack 
-

@@ -5,7 +5,7 @@
     },
     {
         "ParameterKey": "LoggingAccountName",
-        "ParameterValue": "Logging Account"
+        "ParameterValue": "LogArchive"
     },
     {
         "ParameterKey": "SecurityAccountEmail",
@@ -13,6 +13,6 @@
     },
     {
         "ParameterKey": "SecurityAccountName",
-        "ParameterValue": "Audit Account"
+        "ParameterValue": "Audit"
     }
 ]

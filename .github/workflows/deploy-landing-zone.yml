@@ -29,21 +29,21 @@ jobs:
         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsDeployRole
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Validate Landing Zone Role Template
+    - name: Validate Landing Zone Roles Template
       run: |
         aws cloudformation validate-template \
         --template-body file://templates/landing-zone-roles.yaml \
         --output json \
         --region us-east-1
 
-    - name: Deploy Landing Zone Role Template
+    - name: Deploy Landing Zone Roles Template
       run: |
         aws cloudformation deploy \
         --stack-name landing-zone-roles-stack \
-        --template-file templates/landing-zone-role.yaml \
+        --template-file templates/landing-zone-roles.yaml \
         --output text \
         --no-fail-on-empty-changeset \
         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-        --parameter-overrides file://templates/landing-zone-role-parameters.json
+        --parameter-overrides file://templates/landing-zone-roles-parameters.json
         --region us-east-1   
     

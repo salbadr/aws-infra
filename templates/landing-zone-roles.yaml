@@ -1,4 +1,3 @@
----
 AWSTemplateFormatVersion: 2010-09-09
 Description: A CloudFormation template to set the roles for creating Control Tower
 Parameters:

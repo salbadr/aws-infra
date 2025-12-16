@@ -41,12 +41,14 @@ jobs:
         aws cloudformation deploy \
         --stack-name landing-zone-stack \
         --template-file templates/landing-zone.yaml \
-        --output json \
+        --output text \
         --no-fail-on-empty-changeset \
         --region us-east-1   
     
     - name: Wait Landing Zone Template
       run: |
+       aws cloudformation wait stack-exists \
+        --stack-name landing-zone-stack || \
         aws cloudformation wait stack-create-complete \
         --stack-name landing-zone-stack || \ 
         aws cloudformation wait stack-update-complete \

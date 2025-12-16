@@ -39,7 +39,7 @@ jobs:
     - name: Deploy Landing Zone Role Template
       run: |
         aws cloudformation deploy \
-        --stack-name landing-zone-stack \
+        --stack-name landing-zone-roles-stack \
         --template-file templates/landing-zone-role.yaml \
         --output text \
         --no-fail-on-empty-changeset \

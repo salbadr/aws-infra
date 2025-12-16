@@ -1,9 +1,0 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: A simple CloudFormation template to create an S3 bucket and output its name.
-Resources:
-  MyS3Bucket:
-    Type: AWS::S3::Bucket
-Outputs:
-  BucketName:
-    Description: Name of the newly created S3 Bucket
-    Value: !Ref MyS3Bucket

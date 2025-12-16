@@ -3,9 +3,6 @@ Description: A simple CloudFormation template to create an S3 bucket and output 
 Resources:
   MyS3Bucket:
     Type: AWS::S3::Bucket
-    Properties:
-      # No properties needed for a basic bucket; AWS generates a unique name by default.
-      # If you want a specific name, use the BucketName property, ensuring global uniqueness.
 Outputs:
   BucketName:
     Description: Name of the newly created S3 Bucket

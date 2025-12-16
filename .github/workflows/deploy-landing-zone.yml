@@ -9,7 +9,6 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  AWS_ACCOUNT_ID: 411634473249
 
 permissions:
   id-token: write
@@ -27,7 +26,7 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v5.1.0
       with:
-        role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/GitHubActionsDeployRole
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsDeployRole
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Validate Landing Zone Template
@@ -43,6 +42,13 @@ jobs:
         --stack-name landing-zone-stack \
         --template-file templates/landing-zone.yaml \
         --output json \
-        --region us-east-1  
-
+        --no-fail-on-empty-changeset true \
+        --region us-east-1   
+    
+    - name: Wait Landing Zone Template
+      run: |
+        aws cloudformation wait stack-create-complete \
+        --stack-name landing-zone-stack || \ 
+        aws cloudformation wait stack-update-complete \
+        --stack-name landing-zone-stack 
 

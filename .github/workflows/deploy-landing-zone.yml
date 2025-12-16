@@ -27,4 +27,11 @@ jobs:
         role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/GitHubActionsDeployRole
         aws-region: ${{ env.AWS_REGION }}
 
+    - name: Validate CloudFormation Template
+      uses: aws-actions/aws-cloudformation-github-deploy@v1.2.0
+      with:
+        name: LandingZoneStack
+        template: templates/landing-zone.yaml
+      
+
 

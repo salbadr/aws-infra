@@ -9,6 +9,7 @@ env:
   AWS_ACCOUNT_ID: 411634473249
 
 permissions:
+  id-token: write
   contents: read
 
 jobs:

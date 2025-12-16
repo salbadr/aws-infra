@@ -41,7 +41,7 @@ jobs:
       run: |
         aws cloudformation deploy \
         --stack-name landing-zone-stack \
-        --template-file file://templates/landing-zone.yaml \
+        --template-file templates/landing-zone.yaml \
         --output json \
         --region us-east-1  
 

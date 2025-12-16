@@ -1,7 +1,5 @@
 name: Deploy AWS Control Tower Landing
 
-
-
 on:
   push:
     branches: [ "main" ]

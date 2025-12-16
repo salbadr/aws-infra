@@ -36,6 +36,13 @@ jobs:
         --template-body file://templates/landing-zone.yaml \
         --output json \
         --region us-east-1
-      
+
+    - name: Deploy Landing Zone Template
+      run: |
+        aws cloudformation deploy \
+        --stack-name landing-zone-stack\
+        --template-file file://templates/landing-zone.yaml \
+        --output json \
+        --region us-east-1  
 
 

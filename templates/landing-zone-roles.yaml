@@ -12,7 +12,7 @@ Parameters:
     Type: String
     Description: Name for security roles account
 Resources:
-  MyOrganization:
+  Organization:
     Type: 'AWS::Organizations::Organization'
     Properties:
       FeatureSet: ALL

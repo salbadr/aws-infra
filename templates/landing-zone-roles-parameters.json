@@ -1,7 +1,7 @@
 [
    {
         "ParameterKey": "LoggingAccountEmail",
-        "ParameterValue": "sbadraws.logarchive@outlook.com"
+        "ParameterValue": "sbadr_aws_log@outlook.com"
     },
     {
         "ParameterKey": "LoggingAccountName",
@@ -9,7 +9,7 @@
     },
     {
         "ParameterKey": "SecurityAccountEmail",
-        "ParameterValue": "sbadraws.audit@outlook.com"
+        "ParameterValue": "sbadr_aws_audit@outlook.com"
     },
     {
         "ParameterKey": "SecurityAccountName",

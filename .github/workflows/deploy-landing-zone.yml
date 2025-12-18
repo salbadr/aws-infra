@@ -35,7 +35,7 @@ jobs:
         aws cloudformation validate-template \
         --template-body file://templates/landing-zone-roles.yaml \
         --output json \
-        --region {{ env.AWS_REGION }}
+        --region ${{ env.AWS_REGION }}
 
     - name: Deploy Landing Zone Roles Template
       run: |
@@ -43,7 +43,7 @@ jobs:
         --stack-name staging-s3-stack \
         --template-file templates/landing-zone-roles.yaml \
         --output json \
-        --role-arn arn:aws:iam::{{ secrets.AWS_ACCOUNT_ID }}:role/StagingDeployRole \
+        --role-arn arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/StagingDeployRole \
         --no-fail-on-empty-changeset \
-        --region {{ env.AWS_REGION }}
+        --region ${{ env.AWS_REGION }}
     

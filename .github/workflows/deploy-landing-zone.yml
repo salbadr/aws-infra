@@ -9,6 +9,8 @@ on:
 
 env:
   AWS_REGION: us-east-1
+  AWS_TOOLING_ACCOUNT_ID: 824161490652
+  AWS_ACCOUNT_ID: 612782034526
 
 permissions:
   id-token: write
@@ -27,7 +29,7 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v5.1.0
       with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_TOOLING_ACCOUNT_ID }}:role/GitHubActionsDeployRole
+          role-to-assume: arn:aws:iam::${{ env.AWS_TOOLING_ACCOUNT_ID }}:role/GitHubActionsDeployRole
           aws-region: ${{ env.AWS_REGION }}
     
     - name: Validate Landing Zone Roles Template
@@ -43,7 +45,8 @@ jobs:
         --stack-name staging-s3-stack \
         --template-file templates/landing-zone-roles.yaml \
         --output json \
-        --role-arn arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/StagingDeployRole \
+        --role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/StagingDeployRole \
         --no-fail-on-empty-changeset \
+        --debug \
         --region ${{ env.AWS_REGION }}
     

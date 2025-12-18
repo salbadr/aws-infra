@@ -15,6 +15,13 @@ permissions:
   contents: read
 
 jobs:
+  login:
+    name: Login to Tooling Account
+    runs-on: ubuntu-latest
+    steps:
+      - name: Testing variables
+        run: |
+          echo "Using account ID: ${{ secrets.AWS_ACCOUNT_ID }}"
   deploy:
     name: Deploy
     runs-on: ubuntu-latest

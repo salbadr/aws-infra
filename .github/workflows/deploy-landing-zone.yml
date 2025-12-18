@@ -15,18 +15,35 @@ permissions:
   contents: read
 
 jobs:
-  login:
-    name: Login to Tooling Account
-    runs-on: ubuntu-latest
-    steps:
-      - name: Testing variables
-        run: |
-          echo "Using account ID: ${{ secrets.AWS_ACCOUNT_ID }}"
   deploy:
-    name: Deploy
+    name: Login to AWS
     runs-on: ubuntu-latest
     environment: staging
+
     steps:
-      - name: Testing variables
-        run: |
-          echo "Using account ID: ${{ secrets.AWS_ACCOUNT_ID }}"
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v5.1.0
+      with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_TOOLING_ACCOUNT_ID }}:role/GitHubActionsDeployRole
+          aws-region: ${{ env.AWS_REGION }}
+    
+    - name: Validate Landing Zone Roles Template
+      run: |
+        aws cloudformation validate-template \
+        --template-body file://templates/landing-zone-roles.yaml \
+        --output json \
+        --region {{env.AWS_REGION}}
+
+    - name: Deploy Landing Zone Roles Template
+      run: |
+        aws cloudformation deploy \
+        --stack-name staging-s3-stack \
+        --template-file templates/landing-zone-roles.yaml \
+        --output json \
+        --role-arn arn:aws:iam::{{ secrets.AWS_ACCOUNT_ID }}:role/StagingDeployRole \
+        --no-fail-on-empty-changeset \
+        --region {{env.AWS_REGION}}
+    

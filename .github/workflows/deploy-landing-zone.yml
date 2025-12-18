@@ -31,19 +31,21 @@ jobs:
       with:
           role-to-assume: arn:aws:iam::${{ env.AWS_TOOLING_ACCOUNT_ID }}:role/GitHubActionsDeployRole
           aws-region: ${{ env.AWS_REGION }}
-    
+
+    - name: Assume Staging Role (The Chain)
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/StagingDeployer
+          role-chaining: true 
+          role-skip-session-tagging: true
+
     - name: Validate Landing Zone Roles Template
       run: |
         aws cloudformation validate-template \
         --template-body file://templates/landing-zone-roles.yaml \
         --output json \
         --region ${{ env.AWS_REGION }}
-
-    - name: Assume Role for Staging Deploy
-      run: |
-        aws sts assume-role \
-        --role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/StagingDeployRole \
-        --role-session-name staging-deploy
 
     - name: Deploy Landing Zone Roles Template
       run: |

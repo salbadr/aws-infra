@@ -39,13 +39,16 @@ jobs:
         --output json \
         --region ${{ env.AWS_REGION }}
 
+    - name: Assume Role for Staging Deploy
+      run: |
+        aws sts assume-role --role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/StagingDeployRole 
+
     - name: Deploy Landing Zone Roles Template
       run: |
         aws cloudformation deploy \
         --stack-name staging-s3-stack \
         --template-file templates/landing-zone-roles.yaml \
         --output json \
-        --role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/StagingDeployRole \
         --no-fail-on-empty-changeset \
         --debug \
         --region ${{ env.AWS_REGION }}

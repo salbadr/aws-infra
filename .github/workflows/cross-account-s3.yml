@@ -39,7 +39,17 @@ jobs:
         --output json \
         --region ${{ env.AWS_REGION }}
 
-    - name: Deploy Cross Account Template To S3 
+    - name: Deploy Cross Account Role 
+      run: |
+        aws cloudformation deploy \
+        --stack-name cross-account-roles \
+        --template-file templates/deploy-cross-account-roles.yaml \
+        --output json \
+        --no-fail-on-empty-changeset \
+        --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+        --region ${{ env.AWS_REGION }}
+    
+    - name: Deploy S3 Bucket
       run: |
         aws cloudformation deploy \
         --stack-name cross-account-s3-stack \

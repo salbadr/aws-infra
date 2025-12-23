@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Creates Roles for Cross Account Deployment 
+
+Parameters:
+  ToolingAccountId:
+    Description: The accountId of the tooling account
+    Type: 'String'
+
+Resources:
+  CrossAccountDeployRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: 
+              AWS: !Sub "arn:aws:iam::${ToolingAccountId}:role/GitHubActionsDeployRole"
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: CloudFormationAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+            - Effect: Allow
+              Action: 'cloudformation:*'
+              Resource: '*'

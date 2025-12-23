@@ -65,3 +65,17 @@ jobs:
         --no-fail-on-empty-changeset \
         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
         --region ${{ env.AWS_REGION }}
+    
+    - name: Validate Cross Account Roles Template
+      run: |
+        aws cloudformation validate-template \
+        --template-body file://templates/cross-account-roles.yaml \
+        --output json \
+        --region ${{ env.AWS_REGION }}
+
+    - name: Copy Template File to S3 Bucket
+      run: |
+       aws s3 cp template/cross-account-roles.yaml s3://deployment-template/cross-account-roles.yaml
+
+
+    

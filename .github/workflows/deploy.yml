@@ -75,7 +75,7 @@ jobs:
 
     - name: Copy Template File to S3 Bucket
       run: |
-       aws s3 cp template/cross-account-roles.yaml s3://deployment-template/cross-account-roles.yaml
+       aws s3 cp templates/cross-account-roles.yaml s3://deployment-template/cross-account-roles.yaml
 
 
     

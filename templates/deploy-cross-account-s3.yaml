@@ -2,6 +2,19 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Creates S3 Bucket that stores the CrossAccountDeployRole 
 
 Resources:
+  IAMTemplateAccessPolicy:
+     Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: CrossAccountIAMAccess
+      Roles:
+        - GitHubActionsDeployRole 
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "iam:*"
+            Resource: "*"
   S3TemplateAccessPolicy:
     Type: 'AWS::IAM::Policy'
     Properties:

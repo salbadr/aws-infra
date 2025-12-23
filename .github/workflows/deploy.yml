@@ -42,7 +42,7 @@ jobs:
     - name: Deploy Role 
       run: |
         aws cloudformation deploy \
-        --stack-name cross-account-roles \
+        --stack-name deploy-roles \
         --template-file templates/deploy-roles.yaml \
         --output json \
         --no-fail-on-empty-changeset \
@@ -59,7 +59,7 @@ jobs:
     - name: Deploy S3 Bucket
       run: |
         aws cloudformation deploy \
-        --stack-name cross-account-s3-stack \
+        --stack-name deploy-s3-stack \
         --template-file templates/deploy-s3.yaml \
         --output json \
         --no-fail-on-empty-changeset \

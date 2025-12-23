@@ -15,7 +15,7 @@ Resources:
         Version: "2012-10-17"
         Statement:
           - Principal:
-              Service: 'cloudformation.amazon.com'
+              Service: 'cloudformation.amazonaws.com'
             Effect: Allow
             Action:
               - 's3:GetObject'

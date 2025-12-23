@@ -45,6 +45,7 @@ jobs:
         --stack-name cross-account-s3-stack \
         --template-file templates/deploy-cross-account-s3.yaml \
         --output json \
+        --debug \
         --no-fail-on-empty-changeset \
         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
         --region ${{ env.AWS_REGION }}

@@ -32,28 +32,35 @@ jobs:
           role-to-assume: arn:aws:iam::${{ env.AWS_TOOLING_ACCOUNT_ID }}:role/GitHubActionsDeployRole
           aws-region: ${{ env.AWS_REGION }}
 
-    - name: Validate Landing Zone Roles Template
+    - name: Validate Roles Template
       run: |
         aws cloudformation validate-template \
-        --template-body file://templates/deploy-cross-account-s3.yaml \
+        --template-body file://templates/deploy-roles.yaml \
         --output json \
         --region ${{ env.AWS_REGION }}
-
-    - name: Deploy Cross Account Role 
+    
+    - name: Deploy Role 
       run: |
         aws cloudformation deploy \
         --stack-name cross-account-roles \
-        --template-file templates/deploy-cross-account-roles.yaml \
+        --template-file templates/deploy-roles.yaml \
         --output json \
         --no-fail-on-empty-changeset \
         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+        --region ${{ env.AWS_REGION }}
+
+    - name: Validate S3 Template
+      run: |
+        aws cloudformation validate-template \
+        --template-body file://templates/deploy-s3.yaml \
+        --output json \
         --region ${{ env.AWS_REGION }}
     
     - name: Deploy S3 Bucket
       run: |
         aws cloudformation deploy \
         --stack-name cross-account-s3-stack \
-        --template-file templates/deploy-cross-account-s3.yaml \
+        --template-file templates/deploy-s3.yaml \
         --output json \
         --no-fail-on-empty-changeset \
         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \

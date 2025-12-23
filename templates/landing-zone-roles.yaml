@@ -1,7 +1,0 @@
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample CloudFormation template to create an S3 bucket.
-
-Resources:
-  MyS3Bucket:
-    Type: "AWS::S3::Bucket"
-    # No Properties section needed for default settings

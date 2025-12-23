@@ -4,8 +4,8 @@ Description: Creates S3 Bucket that stores the CrossAccountDeployRole
 Resources:
   S3AccessRole:
     Type: "AWS::IAM::Role"
-    RoleName: "CrossAccountS3TemplateRole"
     Properties:
+      RoleName: "CrossAccountS3TemplateRole"
       Policies:
         Version: "2012-10-17"
         Statement:

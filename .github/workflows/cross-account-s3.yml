@@ -32,6 +32,13 @@ jobs:
           role-to-assume: arn:aws:iam::${{ env.AWS_TOOLING_ACCOUNT_ID }}:role/GitHubActionsDeployRole
           aws-region: ${{ env.AWS_REGION }}
 
+    - name: Validate Landing Zone Roles Template
+      run: |
+        aws cloudformation validate-template \
+        --template-body file://templates/deploy-cross-account-s3.yaml \
+        --output json \
+        --region ${{ env.AWS_REGION }}
+
     - name: Deploy Cross Account Template To S3 
       run: |
         aws cloudformation deploy \
@@ -39,5 +46,4 @@ jobs:
         --template-file templates/deploy-cross-account-s3.yaml \
         --output json \
         --no-fail-on-empty-changeset \
-        --debug \
         --region ${{ env.AWS_REGION }}

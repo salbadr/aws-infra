@@ -16,9 +16,7 @@ Resources:
           - Effect: Allow
             Action:
               - "s3:*"
-            Resource: 
-              - !Sub "arn:aws:s3:::deployment-templates-${AWS::AccountId}"
-              - !Sub "arn:aws:s3:::deployment-templates-${AWS::AccountId}/*"
+            Resource: "*"
 
   S3CreateBucket:
     Type: 'AWS::S3::Bucket'

@@ -19,3 +19,8 @@ Resources:
             Resource: 
               - !Sub "arn:aws:s3:::deployment-templates-${AWS::AccountId}"
               - !Sub "arn:aws:s3:::deployment-templates-${AWS::AccountId}/*"
+
+  S3CreateBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: deployment-template

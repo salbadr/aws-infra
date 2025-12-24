@@ -41,7 +41,7 @@ jobs:
     - name: Clean Template File to S3 Bucket
       run: |
         EXISTING=$(aws s3 ls s3://deployment-template > /dev/null 2>&1)
-        if [-z "$EXISTING"]; then
+        if [-n "$EXISTING"]; then
           aws s3 rm s3://deployment-template/cross-account-roles.yaml
         else
           echo "No cross-account-roles.yaml file exist"

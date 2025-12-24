@@ -51,16 +51,39 @@ jobs:
     
     - name: Clean Deploy Cross Account Roles Stack Set instances
       run: |
-          aws cloudformation delete-stack-instances \
-          --stack-set-name ${{env.CROSS_ACCOUNT_STACK_SET_NAME}} \
-          --regions ${{ env.AWS_REGION }} \
-          --deployment-targets OrganizationalUnitIds='["${{env.AWS_ORGANIZATIONAL_UNIT_ID}}"]' \
-          --call-as DELEGATED_ADMIN \
-          --no-retain-stacks \
-          --operation-preferences FailureToleranceCount=0,MaxConcurrentCount=1
-    
-    - name: Clean Deploy Cross Account Roles Stack Set
-      run: |
+          echo "Starting deletion of stack instances..."
+          OP_ID=$(aws cloudformation delete-stack-instances \
+            --stack-set-name ${{env.CROSS_ACCOUNT_STACK_SET_NAME}} \
+            --deployment-targets OrganizationalUnitIds='["${{env.AWS_ORGANIZATIONAL_UNIT_ID}}"]' \
+            --regions us-east-1 \
+            --no-retain-stacks \
+            --call-as DELEGATED_ADMIN \
+            --query "OperationId" --output text)
+
+          echo "Waiting for operation $OP_ID to complete..."
+          while true; do
+            STATUS=$(aws cloudformation describe-stack-set-operation \
+              --stack-set-name ${{env.CROSS_ACCOUNT_STACK_SET_NAME}} \
+              --operation-id $OP_ID \
+              --call-as DELEGATED_ADMIN \
+              --query "StackSetOperation.Status" --output text)
+            
+            if [ "$STATUS" == "SUCCEEDED" ]; then
+              echo "Instances deleted successfully."
+              break
+            elif [[ "$STATUS" == "FAILED" || "$STATUS" == "STOPPED" ]]; then
+              echo "Cleanup failed with status: $STATUS"
+              exit 1
+            fi
+            echo "Current status: $STATUS... waiting 15s"
+            sleep 15
+          done
+
+          echo "Deleting the StackSet blueprint..."
           aws cloudformation delete-stack-set \
-          --stack-set-name ${{env.CROSS_ACCOUNT_STACK_SET_NAME}} \
-          --call-as DELEGATED_ADMIN
+            --stack-set-name ${{env.CROSS_ACCOUNT_STACK_SET_NAME}} \
+            --call-as DELEGATED_ADMIN
+          
+          echo "Cleanup complete! Environment is fresh."
+    
+   

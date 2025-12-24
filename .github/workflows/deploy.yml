@@ -78,12 +78,16 @@ jobs:
     - name: Copy Template File to S3 Bucket
       run: |
        aws s3 cp templates/cross-account-roles.yaml s3://deployment-template/cross-account-roles.yaml
+
+    - name: Verify Identity
+      run: |
+        aws sts get-caller-identity
     
     - name: Deploy Cross Account Roles Stack Set
       run: |
         aws cloudformation create-stack-set \
         --stack-set-name cross-account-roles-stack \
-        --template-url https://deployment-template.s3.us-east-1.amazonaws.com/cross-account-roles.yaml \
+        --template-url https://deployment-template.s3.${{ env.AWS_REGION }}.amazonaws.com/cross-account-roles.yaml \
         --output json \
         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
         --permission-model SERVICE_MANAGED \

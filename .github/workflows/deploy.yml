@@ -113,6 +113,6 @@ jobs:
         aws cloudformation create-stack-instances \
         --stack-set-name cross-account-roles-stack \
         --regions ${{ env.AWS_REGION }} \
-        --deployment-targets OrganizationalUnitIds ='["${{env.AWS_ORGANIZATIONAL_UNIT_ID}}"]' \
+        --deployment-targets OrganizationalUnitIds='["${{env.AWS_ORGANIZATIONAL_UNIT_ID}}"]' \
         --call-as DELEGATED_ADMIN \
         --operation-preferences FailureToleranceCount=0,MaxConcurrentCount=1

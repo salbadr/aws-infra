@@ -81,7 +81,9 @@ jobs:
     
     - name: Deploy Cross Account Roles Stack Set
       run: |
-        if ! aws cloudformation describe-stack-set --stack-set-name cross-account-roles-stack --call-as DELEGATED_ADMIN --region ${{ env.AWS_REGION }} > /dev/null 2>&1; then
+        EXISTING=$(aws cloudformation describe-stack-set --stack-set-name cross-account-roles-stack --call-as DELEGATED_ADMIN --region ${{ env.AWS_REGION }} > /dev/null 2>&1)
+
+        if [-z "$EXISTING"]; then
           echo "StackSet does not exist. Creating..."
           aws cloudformation create-stack-set \
           --stack-set-name cross-account-roles-stack \

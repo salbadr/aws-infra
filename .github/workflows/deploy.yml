@@ -84,7 +84,7 @@ jobs:
 
         if [-z "$EXISTING"]; then
           echo "StackSet does not exist. Creating..."
-          aws cloudformation create-stack-set \
+          OP_ID=$(aws cloudformation create-stack-set \
           --stack-set-name ${{env.CROSS_ACCOUNT_STACK_SET_NAME}} \
           --template-url https://deployment-template.s3.${{ env.AWS_REGION }}.amazonaws.com/cross-account-roles.yaml \
           --output json \
@@ -93,8 +93,28 @@ jobs:
           --auto-deployment Enabled=true,RetainStacksOnAccountRemoval=false \
           --call-as DELEGATED_ADMIN \
           --parameters ParameterKey=ToolingAccountId,ParameterValue=${{env.AWS_TOOLING_ACCOUNT_ID}} \
-          --region ${{ env.AWS_REGION }} \
+          --region ${{ env.AWS_REGION }})
           
+          echo "Waiting for operation $OP_ID to complete..."
+
+          while true; do
+            STATUS=$(aws cloudformation describe-stack-set-operation \
+              --stack-set-name ${{env.CROSS_ACCOUNT_STACK_SET_NAME}} \
+              --operation-id $OP_ID \
+              --call-as DELEGATED_ADMIN \
+              --query "StackSetOperation.Status" --output text)
+            
+            if [ "$STATUS" == "SUCCEEDED" ]; then
+              echo "Instances created successfully."
+              break
+            elif [[ "$STATUS" == "FAILED" || "$STATUS" == "STOPPED" ]]; then
+              echo "Creation failed with status: $STATUS"
+              exit 1
+            fi
+            echo "Current status: $STATUS... waiting 15s"
+            sleep 15
+          done
+
           echo "Creating initial instances to OrganizationalUnitId=${{env.AWS_ORGANIZATIONAL_UNIT_ID}}"
           aws cloudformation create-stack-instances \
           --stack-set-name ${{env.CROSS_ACCOUNT_STACK_SET_NAME}} \
@@ -102,6 +122,7 @@ jobs:
           --deployment-targets OrganizationalUnitIds='["${{env.AWS_ORGANIZATIONAL_UNIT_ID}}"]' \
           --call-as DELEGATED_ADMIN \
           --operation-preferences FailureToleranceCount=0,MaxConcurrentCount=1
+          
         else
           echo "StackSet already exists. Updating template..."
           aws cloudformation update-stack-set \

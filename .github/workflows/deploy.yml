@@ -83,6 +83,11 @@ jobs:
       run: |
         aws sts get-caller-identity
     
+    
+    - name: Verify Service Access
+      run: |
+        aws organizations list-aws-service-access-for-organization
+    
     - name: Deploy Cross Account Roles Stack Set
       run: |
         aws cloudformation create-stack-set \

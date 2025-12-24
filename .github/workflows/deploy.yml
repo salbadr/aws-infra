@@ -22,7 +22,6 @@ jobs:
   deploy:
     name: Deploy AWS
     runs-on: ubuntu-latest
-    environment: staging
 
     steps:
     - name: Checkout

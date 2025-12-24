@@ -10,7 +10,9 @@ on:
 env:
   AWS_REGION: us-east-1
   AWS_TOOLING_ACCOUNT_ID: 824161490652
-  AWS_ACCOUNT_ID: 612782034526
+  AWS_STAGING_ACCOUNT_ID: 612782034526
+  AWS_PRODUCTION_ACCOUNT_ID: 612782034526
+
 
 permissions:
   id-token: write
@@ -76,6 +78,22 @@ jobs:
     - name: Copy Template File to S3 Bucket
       run: |
        aws s3 cp templates/cross-account-roles.yaml s3://deployment-template/cross-account-roles.yaml
-
-
     
+    - name: Deploy Cross Account Roles Stack Set
+      run: |
+        aws cloudformation create-stack-set \
+        --stack-set-name cross-account-roles-stack \
+        --template-url https://deployment-template.s3.us-east-1.amazonaws.com/cross-account-roles.yaml \
+        --output json \
+        --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+        --permission-model SERVICE_MANAGED \
+        --auto-deployment Enabled=true,RetainStacksOnAccountRemoval=false \
+        --region ${{ env.AWS_REGION }}
+
+    - name: Deploy Cross Account Roles To Staging and Production
+      run: |
+        aws cloudformation create-stack-instances \
+        --stack-set-name cross-account-roles-stack \
+        --deployment-targets Accounts='[${{env.AWS_STAGING_ACCOUNT_ID}}, ${{env.AWS_PRODUCTION_ACCOUNT_ID}}]' \        
+        --operation-preferences FailureToleranceCount=0,MaxConcurrentCount=1 \
+        --region ${{ env.AWS_REGION }}

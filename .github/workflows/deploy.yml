@@ -78,15 +78,6 @@ jobs:
     - name: Copy Template File to S3 Bucket
       run: |
        aws s3 cp templates/cross-account-roles.yaml s3://deployment-template/cross-account-roles.yaml
-
-    - name: Verify Identity
-      run: |
-        aws sts get-caller-identity
-    
-    
-    - name: Verify Service Access
-      run: |
-        aws organizations list-aws-service-access-for-organization
     
     - name: Deploy Cross Account Roles Stack Set
       run: |
@@ -97,8 +88,8 @@ jobs:
         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
         --permission-model SERVICE_MANAGED \
         --auto-deployment Enabled=true,RetainStacksOnAccountRemoval=false \
-        --region ${{ env.AWS_REGION }}
-        --call-as DELEGATED_ADMIN
+        --call-as DELEGATED_ADMIN \
+        --region ${{ env.AWS_REGION }} 
 
     - name: Deploy Cross Account Roles To Staging and Production
       run: |

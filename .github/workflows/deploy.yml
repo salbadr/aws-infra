@@ -81,17 +81,32 @@ jobs:
     
     - name: Deploy Cross Account Roles Stack Set
       run: |
-        aws cloudformation create-stack-set \
-        --stack-set-name cross-account-roles-stack \
-        --template-url https://deployment-template.s3.${{ env.AWS_REGION }}.amazonaws.com/cross-account-roles.yaml \
-        --output json \
-        --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-        --permission-model SERVICE_MANAGED \
-        --auto-deployment Enabled=true,RetainStacksOnAccountRemoval=false \
-        --call-as DELEGATED_ADMIN \
-        --parameters ParameterKey=ToolingAccountId,ParameterValue=${{env.AWS_TOOLING_ACCOUNT_ID}} \
-        --region ${{ env.AWS_REGION }} 
-
+        if ! aws cloudformation describe-stack-set --stack-set-name cross-account-roles-stack --call-as DELEGATED_ADMIN --region ${{ env.AWS_REGION }} > /dev/null 2>&1; then
+          echo "StackSet does not exist. Creating..."
+          aws cloudformation create-stack-set \
+          --stack-set-name cross-account-roles-stack \
+          --template-url https://deployment-template.s3.${{ env.AWS_REGION }}.amazonaws.com/cross-account-roles.yaml \
+          --output json \
+          --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+          --permission-model SERVICE_MANAGED \
+          --auto-deployment Enabled=true,RetainStacksOnAccountRemoval=false \
+          --call-as DELEGATED_ADMIN \
+          --parameters ParameterKey=ToolingAccountId,ParameterValue=${{env.AWS_TOOLING_ACCOUNT_ID}} \
+          --region ${{ env.AWS_REGION }} 
+        else
+          echo "StackSet already exists. Updating template..."
+          aws cloudformation update-stack-set \
+            --stack-set-name cross-account-roles-stack \
+            --template-url https://deployment-template.s3.${{ env.AWS_REGION }}.amazonaws.com/cross-account-roles.yaml \
+            --output json \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+            --permission-model SERVICE_MANAGED \
+            --auto-deployment Enabled=true,RetainStacksOnAccountRemoval=false \
+            --call-as DELEGATED_ADMIN \
+            --parameters ParameterKey=ToolingAccountId,ParameterValue=${{env.AWS_TOOLING_ACCOUNT_ID}} \
+            --region ${{ env.AWS_REGION }} 
+        fi
+        
     - name: Deploy Cross Account Roles To Staging and Production
       run: |
         aws cloudformation create-stack-instances \

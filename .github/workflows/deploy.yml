@@ -89,6 +89,7 @@ jobs:
         --permission-model SERVICE_MANAGED \
         --auto-deployment Enabled=true,RetainStacksOnAccountRemoval=false \
         --region ${{ env.AWS_REGION }}
+        --call-as DELEGATED_ADMIN
 
     - name: Deploy Cross Account Roles To Staging and Production
       run: |

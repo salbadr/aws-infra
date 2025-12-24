@@ -89,6 +89,7 @@ jobs:
         --permission-model SERVICE_MANAGED \
         --auto-deployment Enabled=true,RetainStacksOnAccountRemoval=false \
         --call-as DELEGATED_ADMIN \
+        --parameters ToolingAccountId=${{env.AWS_TOOLING_ACCOUNT_ID}}
         --region ${{ env.AWS_REGION }} 
 
     - name: Deploy Cross Account Roles To Staging and Production

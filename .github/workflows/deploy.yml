@@ -95,7 +95,7 @@ jobs:
           --parameters ParameterKey=ToolingAccountId,ParameterValue=${{env.AWS_TOOLING_ACCOUNT_ID}} \
           --region ${{ env.AWS_REGION }} \
           
-          echo "Creating initial instances to OrganizationalUnitId=${{env.AWS_ORGANIZATIONAL_UNIT_ID}}" \
+          echo "Creating initial instances to OrganizationalUnitId=${{env.AWS_ORGANIZATIONAL_UNIT_ID}}"
           aws cloudformation create-stack-instances \
           --stack-set-name ${{env.CROSS_ACCOUNT_STACK_SET_NAME}} \
           --regions ${{ env.AWS_REGION }} \

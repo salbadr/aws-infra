@@ -10,6 +10,7 @@ Resources:
   CrossAccountDeployRole:
     Type: 'AWS::IAM::Role'
     Properties:
+      RoleName: CrossAccountDeployRole
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:

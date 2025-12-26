@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   deploy:
-    name: Deploy AWS
+    name: Deploy Staging
     runs-on: ubuntu-latest
 
     steps:

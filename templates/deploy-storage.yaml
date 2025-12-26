@@ -1,11 +1,29 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: A simple CloudFormation template to create an S3 bucket.
 Resources:
-  MyS3Bucket:
+  ClientS3Bucket:
     Type: 'AWS::S3::Bucket'
-    # The 'Properties' section is optional for a basic bucket.
-    # AWS will generate a unique physical name for the bucket.
-Outputs:
-  BucketName:
-    Description: Name of the sample Amazon S3 bucket
-    Value: !Ref MyS3Bucket
+    Properties:
+      BucketName: 'website'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        IndexDocument: index.html      
+
+  ClientS3BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref ClientS3Bucket
+      PolicyDocument:
+        PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Principal: "*"
+            Effect: Allow
+            Action:
+              - 's3:GetObject'
+            Resource:
+              - !Sub "${ClientS3Bucket.Arn}/*"

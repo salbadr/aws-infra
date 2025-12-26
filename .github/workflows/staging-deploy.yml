@@ -37,7 +37,8 @@ jobs:
       with:
           role-to-assume: arn:aws:iam::${{ env.AWS_STAGING_ACCOUNT_ID }}:role/CrossAccountDeployRole
           aws-region: ${{ env.AWS_REGION }}
-          role-session-name: StagingStorageDeployment
+          role-chaining: true
+          role-skip-session-tagging: true
 
     - name: Validate Staging Template
       run: |

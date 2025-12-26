@@ -1,0 +1,53 @@
+name: Staging AWS Deployment
+
+on:
+  workflow_run: 
+    workflows: ["Sets up AWS Infra for Multi-Account Deployment"]
+    types:
+      - completed
+    branches: [ "main" ]
+
+env:
+  AWS_REGION: us-east-1
+  AWS_STAGING_ACCOUNT_ID: 612782034526
+  AWS_STAGING_ACCOUNT_STACK_NAME: website-stack 
+
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy AWS
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v5.1.0
+      with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_TOOLING_ACCOUNT_ID }}:role/GitHubActionsDeployRole
+          aws-region: ${{ env.AWS_REGION }}
+
+    - name: Validate Staging Template
+      run: |
+        aws cloudformation validate-template \
+        --template-body file://templates/deploy-storage.yaml \
+        --output json \
+        --region ${{ env.AWS_REGION }}
+    
+    - name: Deploy Role 
+      run: |
+        aws cloudformation deploy \
+        --stack-name deploy-storage \
+        --template-file templates/deploy-storage.yaml \
+        --output json \
+        --role-arn arn:aws:iam::${{env.AWS_STAGING_ACCOUNT_ID}}:role/CrossAccountDeployRole
+        --no-fail-on-empty-changeset \
+        --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+        --region ${{ env.AWS_REGION }}
+
+   

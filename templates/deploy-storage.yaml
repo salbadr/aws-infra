@@ -1,0 +1,11 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: A simple CloudFormation template to create an S3 bucket.
+Resources:
+  MyS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    # The 'Properties' section is optional for a basic bucket.
+    # AWS will generate a unique physical name for the bucket.
+Outputs:
+  BucketName:
+    Description: Name of the sample Amazon S3 bucket
+    Value: !Ref MyS3Bucket

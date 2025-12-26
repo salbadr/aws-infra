@@ -29,8 +29,9 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v5.1.0
       with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_TOOLING_ACCOUNT_ID }}:role/GitHubActionsDeployRole
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_TOOLING_ACCOUNT_ID }}:role/CrossAccountDeployRole
           aws-region: ${{ env.AWS_REGION }}
+          role-session-name: StagingStorageDeployment
 
     - name: Validate Staging Template
       run: |
@@ -39,13 +40,12 @@ jobs:
         --output json \
         --region ${{ env.AWS_REGION }}
     
-    - name: Deploy Role 
+    - name: Deploy Storage 
       run: |
         aws cloudformation deploy \
         --stack-name deploy-storage \
         --template-file templates/deploy-storage.yaml \
         --output json \
-        --role-arn arn:aws:iam::${{env.AWS_STAGING_ACCOUNT_ID}}:role/CrossAccountDeployRole
         --no-fail-on-empty-changeset \
         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
         --region ${{ env.AWS_REGION }}

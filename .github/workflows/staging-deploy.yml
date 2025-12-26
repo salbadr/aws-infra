@@ -26,16 +26,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Configure Tooling credentials
-      uses: aws-actions/configure-aws-credentials@v5.1.0
-      with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_TOOLING_ACCOUNT_ID }}:role/GitHubActionsDeployRole
-          aws-region: ${{ env.AWS_REGION }}
-
     - name: Configure Staging credentials
       uses: aws-actions/configure-aws-credentials@v5.1.0
       with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_TOOLING_ACCOUNT_ID }}:role/CrossAccountDeployRole
+          role-to-assume: arn:aws:iam::${{ env.AWS_STAGING_ACCOUNT_ID }}:role/CrossAccountDeployRole
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: StagingStorageDeployment
 

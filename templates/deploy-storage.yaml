@@ -4,15 +4,15 @@ Resources:
   ClientS3Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: 'static-website'
+      BucketName: !Sub "scootshare-website-${AWS::AccountId}"
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
         BlockPublicPolicy: false
         IgnorePublicAcls: false
         RestrictPublicBuckets: false
       WebsiteConfiguration:
-        IndexDocument: index.html      
-
+        IndexDocument: index.html
+  
   ClientS3BucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
     Properties:
@@ -26,3 +26,6 @@ Resources:
               - 's3:GetObject'
             Resource:
               - !Sub "${ClientS3Bucket.Arn}/*"
+            Condition:
+              IpAddress:
+                'aws:SourceIp': ['99.237.197.41']

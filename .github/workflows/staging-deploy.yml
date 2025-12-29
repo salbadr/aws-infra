@@ -59,7 +59,7 @@ jobs:
 
     - name: Create site images folder
       run: |
-        BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name deploy-storage --query "Stacks[0].Outputs.OutputValue")
+        BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name deploy-storage --query "Stacks[0].Outputs[0].OutputValue")
         echo $BUCKET_NAME
 
 

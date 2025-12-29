@@ -57,4 +57,10 @@ jobs:
         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
         --region ${{ env.AWS_REGION }}
 
+    - name: Create site images folder
+      run: |
+        BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name deploy-storage --query "Stacks[0].Outputs")
+        echo $BUCKET_NAME
+
+
    

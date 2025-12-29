@@ -12,6 +12,11 @@ Resources:
         RestrictPublicBuckets: false
       WebsiteConfiguration:
         IndexDocument: index.html
+
+  AssetsS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub "scootshare-website-${AWS::AccountId}-assets"
   
   ClientS3BucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
@@ -29,3 +34,8 @@ Resources:
             Condition:
               IpAddress:
                 'aws:SourceIp': ['99.237.197.41']
+Outputs:
+  BucketName:
+    Description: The name of the created S3 bucket
+    Value: !Ref AssetsS3Bucket # Use !Ref to get the physical name of the bucket
+   

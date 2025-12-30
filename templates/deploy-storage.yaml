@@ -17,7 +17,7 @@ Resources:
     Type: 'AWS::S3::Bucket'
     Properties:
       BucketName: !Sub "scootshare-website-${AWS::AccountId}-assets"
-  
+
   ClientS3BucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
     Properties:
@@ -34,8 +34,69 @@ Resources:
             Condition:
               IpAddress:
                 'aws:SourceIp': ['99.237.197.41']
+
+ #Creates a new origin access control in CloudFront. After you create an origin access control, 
+  #you can add it to an origin in a CloudFront distribution so that CloudFront sends authenticated (signed) requests to the origin.
+  AssetsS3BucketCloudFrontOAC:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: scootshare-assets-oac
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  CloudFrontCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Comment: Cache Policy for CloudFront
+        Name: scootshare-assets-cdn-cache-policy
+        DefaultTTL: 86400
+        MaxTTL: 31536000
+        MinTTL: 86400
+        ParametersInCacheKeyAndForwardedToOrigin: {}
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Origin:
+          - Id: S3Origin
+            Domain: !GetAtt AssetsS3Bucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt AssetsS3BucketCloudFrontOAC.Id
+            S3OriginConfig: {}  # Empty for OAC
+
+      DefaultCacheBehavior:
+        AllowedMethods: ['GET', 'HEAD']
+        TargetOriginId: S3Origin
+        ViewerProtocolPolicy: allow-all
+        CachePolicyId: !Ref CloudFrontCachePolicy
+  
+  AssetsS3BucketPolicy:
+    Bucket: !Ref AssetsS3Bucket
+    PolicyDocument:
+      Version: "2012-10-17"
+      Statement:
+        - Principal:
+            Service: cloudfront.amazonaws.com
+          Effect: Allow
+          Action:
+            - 's3:GetObject'
+          Resource:
+            - !Sub "${AssetsS3Bucket.Arn}/*"
+          Condition:
+            ArnLike:
+              AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}'
+
+
 Outputs:
   BucketName:
     Description: The name of the created S3 bucket
     Value: !Ref AssetsS3Bucket # Use !Ref to get the physical name of the bucket
+  
+  CloudFrontURL:
+    Value: !GetAtt CloudFrontDistribution.DomainName
+    Description: CloudFront distribution domain
    

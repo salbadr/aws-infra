@@ -62,6 +62,11 @@ jobs:
         echo $BUCKET_NAME
         aws s3api put-object --bucket $BUCKET_NAME --key site/
 
+    - name: Get cloudfront domain url
+      run: |
+        CLOUDFRONT_URL=$(aws cloudformation describe-stacks --stack-name deploy-storage --query "Stacks[0].Outputs[?OutputKey=='CloudFrontURL'].OutputValue" --output text)
+        echo $CLOUDFRONT_URL
+
 
 
    

@@ -55,40 +55,48 @@ Resources:
         DefaultTTL: 86400
         MaxTTL: 31536000
         MinTTL: 86400
-        ParametersInCacheKeyAndForwardedToOrigin: {}
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: all
+          EnableAcceptEncodingGzip: false
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: all
 
   CloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
         Enabled: true
-        Origin:
+        Origins:
           - Id: S3Origin
-            Domain: !GetAtt AssetsS3Bucket.RegionalDomainName
+            DomainName: !GetAtt AssetsS3Bucket.RegionalDomainName
             OriginAccessControlId: !GetAtt AssetsS3BucketCloudFrontOAC.Id
             S3OriginConfig: {}  # Empty for OAC
-
-      DefaultCacheBehavior:
-        AllowedMethods: ['GET', 'HEAD']
-        TargetOriginId: S3Origin
-        ViewerProtocolPolicy: allow-all
-        CachePolicyId: !Ref CloudFrontCachePolicy
+        DefaultCacheBehavior:
+          AllowedMethods: ['GET', 'HEAD']
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: allow-all
+          CachePolicyId: !Ref CloudFrontCachePolicy
   
   AssetsS3BucketPolicy:
-    Bucket: !Ref AssetsS3Bucket
-    PolicyDocument:
-      Version: "2012-10-17"
-      Statement:
-        - Principal:
-            Service: cloudfront.amazonaws.com
-          Effect: Allow
-          Action:
-            - 's3:GetObject'
-          Resource:
-            - !Sub "${AssetsS3Bucket.Arn}/*"
-          Condition:
-            ArnLike:
-              AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}'
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref AssetsS3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Principal:
+              Service: cloudfront.amazonaws.com
+            Effect: Allow
+            Action:
+              - 's3:GetObject'
+            Resource:
+              - !Sub "${AssetsS3Bucket.Arn}/*"
+            Condition:
+              ArnLike:
+                AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}'
 
 
 Outputs:

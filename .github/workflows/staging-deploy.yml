@@ -10,7 +10,6 @@ on:
 env:
   AWS_REGION: us-east-1
   AWS_STAGING_ACCOUNT_ID: 612782034526
-  AWS_STAGING_ACCOUNT_STACK_NAME: website-stack 
 
 
 permissions:
@@ -61,6 +60,8 @@ jobs:
       run: |
         BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name deploy-storage --query "Stacks[0].Outputs[0].OutputValue")
         echo $BUCKET_NAME
+        aws s3api put-object --bucket $BUCKET_NAME --key site/
+
 
 
    

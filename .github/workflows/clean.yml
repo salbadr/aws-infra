@@ -6,8 +6,6 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  AWS_TOOLING_ACCOUNT_ID: 824161490652
-  AWS_ORGANIZATIONAL_UNIT_ID: ou-nzch-e6q38csv
   CROSS_ACCOUNT_STACK_SET_NAME: cross-account-roles-stack 
 
 
@@ -27,13 +25,13 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v5.1.0
       with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_TOOLING_ACCOUNT_ID }}:role/GitHubActionsDeployRole
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_TOOLING_ACCOUNT_ID }}:role/GitHubActionsDeployRole
           aws-region: ${{ env.AWS_REGION }}
     
-    - name: Clean Deploy Role 
+    - name: Clean Github Policy 
       run: |
         aws cloudformation delete-stack \
-        --stack-name deploy-roles \
+        --stack-name deploy-github-policy \
         --output json \
         --region ${{ env.AWS_REGION }}
     
@@ -58,7 +56,7 @@ jobs:
           echo "Starting deletion of stack instances..."
           OP_ID=$(aws cloudformation delete-stack-instances \
             --stack-set-name ${{env.CROSS_ACCOUNT_STACK_SET_NAME}} \
-            --deployment-targets OrganizationalUnitIds='["${{env.AWS_ORGANIZATIONAL_UNIT_ID}}"]' \
+            --deployment-targets OrganizationalUnitIds='["${{secrets.AWS_ORGANIZATIONAL_UNIT_ID}}"]' \
             --regions us-east-1 \
             --no-retain-stacks \
             --call-as DELEGATED_ADMIN \

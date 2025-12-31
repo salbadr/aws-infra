@@ -1,6 +1,11 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Creates S3 Bucket that stores the CrossAccountDeployRole 
 
+Parameters:
+  PrincipalOrgID:
+    Description: The organizational unit id
+    Type: 'String'
+
 Resources:
   S3CreateBucket:
     Type: 'AWS::S3::Bucket'
@@ -23,4 +28,4 @@ Resources:
               - !Sub "${S3CreateBucket.Arn}/*"
             Condition:
               StringEquals:
-                "aws:PrincipalOrgID": "o-ygk30uswcu"
+                "aws:PrincipalOrgID": !Ref PrincipalOrgID

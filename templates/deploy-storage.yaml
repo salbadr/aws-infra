@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: A simple CloudFormation template to create an S3 bucket.
+Description: template to create s3 buckets and cloudfront distributions for assets
 Resources:
   ClientS3Bucket:
     Type: 'AWS::S3::Bucket'
@@ -79,6 +79,7 @@ Resources:
           TargetOriginId: S3Origin
           ViewerProtocolPolicy: allow-all
           CachePolicyId: !Ref CloudFrontCachePolicy
+          Compress: true
   
   AssetsS3BucketPolicy:
     Type: 'AWS::S3::BucketPolicy'

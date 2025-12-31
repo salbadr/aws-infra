@@ -113,7 +113,7 @@ jobs:
             --parameters ParameterKey=ToolingAccountId,ParameterValue=${{secrets.AWS_TOOLING_ACCOUNT_ID}} \
             --region ${{ env.AWS_REGION }}
           
-          # Check if we have any stack instan
+          # Check if we have any stack instances
           INSTANCE_CHECK=$(aws cloudformation list-stack-instances \
             --stack-set-name ${{env.CROSS_ACCOUNT_STACK_SET_NAME}} \
             --call-as DELEGATED_ADMIN \

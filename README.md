@@ -1,6 +1,4 @@
 # aws-infra
-Sets up the infra for AWS. The following stacks are deployed:
-1. Control Tower
 
 
 ## Prerequisites

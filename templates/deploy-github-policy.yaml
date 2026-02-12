@@ -6,7 +6,7 @@ Resources:
     Type: 'AWS::IAM::Policy'
     Properties:
       # A name for this specific "tool" you're adding
-      PolicyName: CrossAccountS3Access
+      PolicyName: CrossAccountAccess
       # The name of the role that already exists in the account
       Roles:
         - GitHubActionsDeployRole 
@@ -16,4 +16,14 @@ Resources:
           - Effect: Allow
             Action:
               - "s3:*"
+              - "cloudformation.*"
+              - "organizations.*"
+              - "iam.*"
             Resource: "*"
+          - Effect: Allow
+            Action: 
+              - "sts:AssumeRole"
+            Resource:
+              - "arn:aws:iam:::role/CrossAccountDeployRole"
+
+

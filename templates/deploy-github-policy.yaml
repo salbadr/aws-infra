@@ -16,9 +16,9 @@ Resources:
           - Effect: Allow
             Action:
               - "s3:*"
-              - "cloudformation.*"
-              - "organizations.*"
-              - "iam.*"
+              - "cloudformation:*"
+              - "organizations:*"
+              - "iam:*"
             Resource: "*"
           - Effect: Allow
             Action: 

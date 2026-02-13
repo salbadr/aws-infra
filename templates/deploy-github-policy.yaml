@@ -3,7 +3,7 @@ Description: Gives GitHubActionsDeployRole access to create S3 buckets
 
 Parameters:
   ResourceOrgID:
-    Description: The organizational unit id
+    Description: The organizational id
     Type: 'String'
 
 Resources:

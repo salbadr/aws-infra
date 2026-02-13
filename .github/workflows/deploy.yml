@@ -46,6 +46,7 @@ jobs:
         --output json \
         --no-fail-on-empty-changeset \
         --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+        --parameter-overrides PrincipalOrgID=${{secrets.AWS_ORGANIZATIONAL_UNIT_ID}} \
         --region ${{ env.AWS_REGION }}
 
     - name: Validate S3 Template

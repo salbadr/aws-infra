@@ -1,6 +1,11 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Gives GitHubActionsDeployRole access to create S3 buckets
 
+Parameters:
+  PrincipalOrgID:
+    Description: The organizational unit id
+    Type: 'String'
+    
 Resources:
   S3TemplateAccessPolicy:
     Type: 'AWS::IAM::Policy'
@@ -22,6 +27,8 @@ Resources:
             Action: 
               - "sts:AssumeRole"
             Resource:
-              - "arn:aws:iam:::role/CrossAccountDeployRole"
-
+              - "arn:aws:iam::*:role/CrossAccountDeployRole"
+            Condition:
+              StringEquals:
+                "aws:PrincipalOrgID": !Ref PrincipalOrgID
 

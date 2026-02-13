@@ -16,7 +16,6 @@ Resources:
           - Effect: Allow
             Action:
               - "s3:*"
-              - "organizations:*"
             Resource: "*"
           - Effect: Allow
             Action: 

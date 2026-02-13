@@ -55,3 +55,5 @@ This requires Github signing and configuring with AWS Identity Provide. This is 
 - For CloudFormation deployment, **CloudFormationFullAccess** was added
 
 - The name of the role is **GitHubActionsDeployRole**
+
+- Add to **GitHubActionsDeployRole** the `AWSCloudFormationFullAccess` and `IAMFullAccess` permissions

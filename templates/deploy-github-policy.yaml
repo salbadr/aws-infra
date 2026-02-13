@@ -5,7 +5,7 @@ Parameters:
   PrincipalOrgID:
     Description: The organizational unit id
     Type: 'String'
-    
+
 Resources:
   S3TemplateAccessPolicy:
     Type: 'AWS::IAM::Policy'
@@ -28,7 +28,3 @@ Resources:
               - "sts:AssumeRole"
             Resource:
               - "arn:aws:iam::*:role/CrossAccountDeployRole"
-            Condition:
-              StringEquals:
-                "aws:PrincipalOrgID": !Ref PrincipalOrgID
-

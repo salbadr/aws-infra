@@ -16,6 +16,7 @@ Resources:
           - Effect: Allow
             Action:
               - "s3:*"
+              - "organizations:ListDelegatedAdministrators"
             Resource: "*"
           - Effect: Allow
             Action: 
